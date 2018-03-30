@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api, Resource
 
 app = Flask(__name__)
@@ -60,6 +60,15 @@ class AccountList(Resource):
 
     def get(self):
         return [a.as_dict() for a in accounts]
+
+    def post(self):
+        json_data = request.get_json()
+        # TODO validate json data
+        type_ = json_data['type']
+        del json_data['type']
+        account = Account(type_, **json_data)
+        accounts.append(account)
+        return account.as_dict(), 201
 
 class CandidateAccountList(Resource):
 
